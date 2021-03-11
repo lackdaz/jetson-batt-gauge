@@ -30,3 +30,17 @@
 *.exe
 *.out
 *.app
+
+# IDE things
+.vscode/
+
+# Build Directories
+build/
+builddir/
+build-clang/
+build-no-qt/
+build-no-flashfire/
+build-all-disabled/
+
+# Test Data Directories
+test/data/
