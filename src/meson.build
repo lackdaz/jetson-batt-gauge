@@ -13,6 +13,7 @@ jetsonbatt_deps = [
 ]
 
 jetsonbatt_src = [
+  'battery.cpp'
 ]
 
 libjetsonbatt_libname = meson.project_name() + '-' + proj_ver_short
