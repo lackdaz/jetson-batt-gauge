@@ -1,10 +1,14 @@
 namespace jetsonbatt::version {
 
-const unsigned int MAJOR = @PROJECT_VERSION_MAJOR @;
-const unsigned int MINOR = @PROJECT_VERSION_MINOR @;
-const unsigned int PATCH = @PROJECT_VERSION_PATCH @;
+// clang-format off
+
+const unsigned int MAJOR = @PROJECT_VERSION_MAJOR@;
+const unsigned int MINOR = @PROJECT_VERSION_MINOR@;
+const unsigned int PATCH = @PROJECT_VERSION_PATCH@;
 const char* LONG = "@PROJECT_VERSION@.@PROJECT_VERSION_GIT@";
 const char* SHORT = "@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@";
 const char* GIT = "@PROJECT_VERSION_GIT@";
+
+// clang-format on
 
 }  // namespace jetsonbatt::version
