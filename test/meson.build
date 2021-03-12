@@ -15,6 +15,24 @@ tests = [
   },
 ]
 
+cmake = import('cmake')
+
+# Configure the CMake project
+
+# libi2c dependency (serial control library)
+# first, try to get a locally installed version
+libi2c_dep = dependency('libi2c-0.1',
+  version: '>=0.1.1',
+  required: false,
+)
+# if it's not found, get it from subproject
+if not libi2c_dep.found()
+	# sub_proj = cmake.subproject('libi2c')
+  libi2c_proj = subproject('libi2c')
+  libi2c_dep = libi2c_proj.get_variable('libi2c_dep')
+endif
+
+
 # build and run tests (on ninja test)
 foreach t: tests
   exe = executable(t['filename'], t['sources'],
