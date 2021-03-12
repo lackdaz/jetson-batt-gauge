@@ -1,3 +1,5 @@
+#pragma once
+
 // def get_voltage(x: int) -> float:  # 0.2mV
 //     return x * (VOLTAGE_RES / 16) * NUMBER_CELLS
 
