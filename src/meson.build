@@ -3,13 +3,17 @@
 # This build file may be modified and distributed under the terms
 # of the MIT license.  See the LICENSE.mit file for details.
 
+
+i2c_proj = subproject('i2c')
+i2c_dep = i2c_proj.get_variable('i2c_dep')
+
 # dependencies
 jetsonbatt_deps = [
-  # FIXME(mdegans): find a way to check for cuda components
   dependency('boost',
     # unlike CMake, 'thread' and 'system' are not implicit, apparently
     modules: ['log', 'log_setup', 'thread', 'system'],
-  ), 
+  ),
+	dependency('i2c')
 ]
 
 # source files go here
@@ -34,7 +38,7 @@ libjetsonbatt = library(meson.project_name(), jetsonbatt_src,
 libjetsonbatt_dep = declare_dependency(
   link_with: libjetsonbatt,
   include_directories: jetsonbatt_incdir,
-  dependencies: jetsonbatt_deps,
+  dependencies: i2c_dep,
 )
 
 # this installs a `.pc` pkg-config file, allowing other libraries and apps to

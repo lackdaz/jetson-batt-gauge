@@ -3,3 +3,5 @@
  * This software may be modified and distributed under the terms
  * of the MIT license.  See the LICENSE.mit file for details.
  */
+
+#include "i2c/i2c.h"

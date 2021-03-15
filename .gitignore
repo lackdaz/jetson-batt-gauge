@@ -44,3 +44,7 @@ build-all-disabled/
 
 # Test Data Directories
 test/data/
+
+# Subprojects
+subprojects/*
+!subprojects/*.wrap
