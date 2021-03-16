@@ -20,7 +20,8 @@ jetsonbatt_incdir = include_directories('.')
 
 # headers you want available publicly go here
 jetsonbatt_public_headers = [
-  jetsonbatt_config_hpp
+  jetsonbatt_config_hpp,
+	'battery.hpp',
   # you probably want more here
 ]
 

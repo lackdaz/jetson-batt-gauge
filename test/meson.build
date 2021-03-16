@@ -15,13 +15,14 @@ tests = [
   },
 ]
 
-# i2c_proj = subproject('libi2c')
-# i2c_dep = i2c_proj.get_variable('i2c_dep')
+i2c_proj = subproject('libi2c')
+i2c_dep = i2c_proj.get_variable('i2c_dep')
 
 # build and run tests (on ninja test)
 foreach t: tests
   exe = executable(t['filename'], t['sources'],
     link_with: libjetsonbatt,
+		dependencies: i2c_dep,
     # this defines LOGFILE and TESTNAME so you can use those in your tests.
     # (eg. for logging. See nvcvcam. for more.)
     cpp_args: [

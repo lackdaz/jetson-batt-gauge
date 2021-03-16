@@ -4,7 +4,7 @@
 # of the MIT license.  See the LICENSE.mit file for details.
 
 
-i2c_proj = subproject('i2c')
+i2c_proj = subproject('libi2c')
 i2c_dep = i2c_proj.get_variable('i2c_dep')
 
 # dependencies
@@ -18,7 +18,7 @@ jetsonbatt_deps = [
 
 # source files go here
 jetsonbatt_src = [
-  'battery.cpp'
+	'battery.cpp',
 ]
 
 # the library target
