@@ -1,5 +1,7 @@
 #pragma once
 
+#include "jetsonbatt_error.hpp"
+
 // def get_voltage(x: int) -> float:  # 0.2mV
 //     return x * (VOLTAGE_RES / 16) * NUMBER_CELLS
 
@@ -21,5 +23,3 @@
 
 // def get_cycles(x: int) -> float:  # convert to cycles for 1% res
 //     return x / 100.0
-
-void get_voltage(int x) {}

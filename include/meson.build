@@ -22,6 +22,7 @@ jetsonbatt_incdir = include_directories('.')
 jetsonbatt_public_headers = [
   jetsonbatt_config_hpp,
 	'battery.hpp',
+	'jetsonbatt_error.hpp'
   # you probably want more here
 ]
 
