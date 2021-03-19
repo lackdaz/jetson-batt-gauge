@@ -9,7 +9,7 @@ i2c_dep = i2c_proj.get_variable('i2c_dep')
 
 # dependencies
 jetsonbatt_deps = [
-  dependency('boost',
+    dependency('boost',
     # unlike CMake, 'thread' and 'system' are not implicit, apparently
     modules: ['log', 'log_setup', 'thread', 'system'],
   ),

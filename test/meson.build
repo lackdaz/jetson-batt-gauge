@@ -4,3 +4,4 @@
 # of the MIT license.  See the LICENSE.mit file for details.
 
 subdir('googletest')
+subdir('integration')
