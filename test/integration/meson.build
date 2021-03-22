@@ -12,6 +12,12 @@ tests = [
     'filename': 'test_i2c',
     'sources': ['test_i2c.cpp'],
     'suites': ['unit'],
+  },
+	{
+    'description': 'vl6180x',
+    'filename': 'vl6180x',
+    'sources': ['vl6180x.cpp'],
+    'suites': ['unit'],
   }
 ]
 

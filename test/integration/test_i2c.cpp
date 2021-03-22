@@ -13,17 +13,21 @@ int main() {
   // battery::hello_world();
 
   int bus;
+
   /* Open i2c bus /dev/i2c-0 */
   if ((bus = i2c_open("/dev/i2c-8")) == -1) {
-    DEBUG << "hello";
+    /* Error process */
+    ERROR << "channel does not exist";
+  } else {
+    INFO << "opened bus";
   }
 
   I2CDevice device;
-  memset(&device, 0, sizeof(device));
+  memset(&device, 0, sizeof(device));  // sets array to zeros
 
   /* 24C04 */
   device.bus = bus;       /* Bus 0 */
-  device.addr = 0x68;     /* Slave address is 0x50, 7-bit */
+  device.addr = 0x36;     /* Slave address is 0x50, 7-bit */
   device.iaddr_bytes = 1; /* Device internal address is 1 byte */
   device.page_bytes = 16; /* Device are capable of 16 bytes per page */
 
@@ -32,13 +36,14 @@ int main() {
   memset(buffer, 0, sizeof(buffer));
 
   /* From i2c 0x0 address read 256 bytes data to buffer */
-  if ((i2c_read(&device, 0x1, buffer, size)) != size) {
+  if ((i2c_read(&device, 0x06, buffer, size)) != size) {
     ERROR << "don't know what went wrong";
     /* Error process */
+  } else {
+    INFO << printf("%s", buffer);
   }
 
   i2c_close(bus);
 
-  INFO << printf("%s", buffer);
   return 0;
 }
