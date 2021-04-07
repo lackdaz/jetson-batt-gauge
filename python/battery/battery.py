@@ -27,6 +27,8 @@ class Battery:
     def init(cls, address: int = 0x36):
         with open_i2c_bus(cls.address) as device:
             pass
+        # cls.reset_minmax_voltage()
+        cls.reset_minmax_current()
 
     @classmethod
     def check_charge(cls, debug: bool = False):
@@ -35,7 +37,6 @@ class Battery:
         buffer = bytearray(8)
         with open_i2c_bus(cls.address, benchmark=debug) as device:
             device.write_then_readinto(addr, buffer)
-            print(buffer)
             cls.charge_level = (
                 struct.unpack_from("@H", buffer)[0] >> 8
             )  # just read upper byte
@@ -59,6 +60,33 @@ class Battery:
         return cls.charge_level
 
     @classmethod
+    def check_minmax_voltage(cls, debug: bool = False):
+        addr = bytearray(1)
+        addr[0] = register.minmax_voltage
+        buffer = bytearray(8)
+        with open_i2c_bus(cls.address, benchmark=debug) as device:
+            device.write_then_readinto(addr, buffer)
+            register_value = struct.unpack_from("@H", buffer)[0]
+            max_byte = register_value >> 8  # max_voltage upper byte
+            min_byte = register_value & 0xFF  # min_voltage lower byte
+            min_voltage, max_voltage = [
+                get_minmax_voltage(min_byte),
+                get_minmax_voltage(max_byte),
+            ]
+        if debug:
+            with formatted_headers("minmax_voltage", benchmark=True):
+                print(f"min {min_voltage:.2f}V max {max_voltage:.2f}V")
+
+    @classmethod
+    def reset_minmax_voltage(cls):
+        buffer = bytearray(3)
+        addr = register.minmax_voltage
+        buffer[0] = addr
+        buffer[1] = 0x00FF
+        with open_i2c_bus(cls.address) as device:
+            device.write(buffer)
+
+    @classmethod
     def check_avg_current(cls, debug=False):
         addr = bytearray(1)
         addr[0] = register.avg_current
@@ -79,11 +107,39 @@ class Battery:
         buffer = bytearray(8)
         with open_i2c_bus(cls.address, benchmark=debug) as device:
             device.write_then_readinto(addr, buffer)
-            register_values = struct.unpack_from("@bb", buffer)
-            min_current, max_current = map(get_minmax_current, register_values)
+            register_value = struct.unpack_from("<h", buffer)[0]
+            print(f"minmax_buffer: {buffer}")
+
+            lsb_msb = Bitwise.get_min_max_byte(register_value)
+            lsb_msb = map(Bitwise.get_signed_twos_complement, lsb_msb)
+            min_current, max_current = map(get_minmax_current, lsb_msb)
+
+            # register_values = struct.unpack_from("<bb", buffer)
+            # print(f"minmax_buffer: {buffer}")
+            # max_byte = register_values[1]  # max_current MSb
+            # min_byte = register_values[0]  # min_current LSb
+            # print(f"min: {min_byte}, max: {max_byte}")
+
+            # min_current, max_current = map(
+            #     get_minmax_current, register_values
+            # )  # LSb first then MSb
+
         if debug:
             with formatted_headers("minmax_current", benchmark=True):
-                print(f"min {min_current:.2f}A max {max_current:.2f}A")
+                print(f"min: {min_current:.2f}A max: {max_current:.2f}A")
+
+    @classmethod
+    def reset_minmax_current(cls):
+        buffer = bytearray(3)
+        addr = register.minmax_current
+        buffer[0] = addr
+        buffer[1] = 0x7F  # LSB -> 127 (most positive)
+        buffer[2] = 0x80  # MSB -> -128 (most negative)
+        # buffer = struct.pack("@BHh", addr, 0xFF, 0x80)
+        print(f"reset_buffer: {buffer}")
+        # max current -> 80 (most negative), min current -> 7F (most positive)
+        with open_i2c_bus(cls.address) as device:
+            device.write(buffer)
 
     @classmethod
     def check_spot_current(cls, debug=False):

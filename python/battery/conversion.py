@@ -8,11 +8,14 @@ __all__ = [
     "get_cycles",
 ]
 
-RSENSE = 5  # mohms
+from typing import Union
+
+RSENSE = 10  # RBatt is 10mohms
 CURRENT_RES = 1.5625 / (1000)  # 1.5625uA -> mA
 VOLTAGE_RES = 1.25 / 1000  # 1.25mV
 NUMBER_CELLS = 4
 TIME_RES = 5.625  # seconds
+
 
 def get_voltage(x: int) -> float:  # 0.2mV
     return x * (VOLTAGE_RES / 16) * NUMBER_CELLS
@@ -22,7 +25,7 @@ def get_minmax_voltage(x: int) -> float:  # 0.2mV
     return x * 0.02 * NUMBER_CELLS
 
 
-# minmax res- > 0.4mV / rsense -> 5 mohms
+# minmax res-> 0.4mV / rsense -> 10 mohms
 def get_minmax_current(x: int) -> float:
     return x * 0.4 / RSENSE
 
@@ -41,3 +44,10 @@ def get_time(x: int) -> float:  # convert to minutes
 
 def get_cycles(x: int) -> float:  # convert to cycles for 1% res
     return x / 100.0
+
+
+# def get_twos_complement(value: Union[bytes, str], bits: int = 8):
+#     value = int(hexstr, 16)
+#     if value & (1 << (bits - 1)):
+#         value -= 1 << bits
+#     return value

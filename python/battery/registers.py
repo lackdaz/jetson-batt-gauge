@@ -10,7 +10,7 @@ _registers_d = {
     "minmax_current": 0x1C,
     "avg_temp": 0x16,
     "voltage": 0x09,
-    "minmaxvoltage": 0x1B,
+    "minmax_voltage": 0x1B,
     "state_of_charge": 0x06,
     "cycles": 0x17,
     "time_to_empty": 0x11,
@@ -37,7 +37,7 @@ class Register(NamedTuple):
     minmax_current: int = -1
     avg_temp: int = -1
     voltage: int = -1
-    minmaxvoltage: int = -1
+    minmax_voltage: int = -1
     state_of_charge: int = -1
     cycles: int = -1
     time_to_empty: int = -1

@@ -1,15 +1,12 @@
 __all__ = ["open_i2c_bus", "formatted_headers"]
 
 import busio
-from .pin import SCL, SDA
 from adafruit_bus_device.i2c_device import I2CDevice
 from time import perf_counter
 from contextlib import contextmanager
-
-from contextlib import contextmanager
-
 import sys
 
+from .pin import SCL, SDA
 from .formatting import bcolors
 
 execution_time = 0.00
