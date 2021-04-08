@@ -11,7 +11,7 @@ i2c_dep = i2c_proj.get_variable('i2c_dep')
 jetsonbatt_deps = [
     dependency('boost',
     # unlike CMake, 'thread' and 'system' are not implicit, apparently
-    modules: ['log', 'log_setup', 'thread', 'system'],
+    modules: ['log', 'log_setup', 'thread', 'system', 'iostreams'],
   ),
 	dependency('i2c')
 ]
@@ -19,6 +19,7 @@ jetsonbatt_deps = [
 # source files go here
 jetsonbatt_src = [
 	'battery.cpp',
+    'bitwise.cpp'
 ]
 
 # the library target

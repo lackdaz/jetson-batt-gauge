@@ -6,13 +6,60 @@
 
 #include "i2c/i2c.h"
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+
+#include <boost/format.hpp>
+
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/stream.hpp>
+#include <ostream>
+
+#include <typeinfo>
+
+struct Data {
+  double value;
+
+  template <class Archive>
+  void serialize(Archive& ar, const unsigned int) {
+    ar& value;
+  }
+  friend std::ostream& operator<<(std::ostream& os, const Data& dt);
+};
+
+// std::ostream& operator<<(std::ostream& os, const Data& dt) {
+//   os << dt.mo << '/' << dt.da << '/' << dt.yr;
+//   return os;
+// }
+
+void print_i2c_data(const unsigned char* data, size_t len) {
+  size_t i = 0;
+  for (i = 0; i < len; i++) {
+    if (i % 16 == 0) {
+      fprintf(stdout, "\n");
+    }
+    fprintf(stdout, "%02x ", data[i]);
+  }
+  fprintf(stdout, "\n");
+}
+
 int main() {
   // printf("Hello there %#04x.\n", jetsonbatt::registers::current);
   // std::cout << "1) size of namespace variable:              "
   //           << sizeof(jetsonbatt::registers::current) << "\n";
   // battery::hello_world();
 
-  int bus;
+  short int bus = 8;
+  char bus_name[32];
+  memset(bus_name, 0, sizeof(bus_name));
+
+  if (snprintf(bus_name, sizeof(bus_name), "/dev/i2c-%u\n", bus) < 0) {
+    fprintf(stderr, "Format i2c bus name error!");
+    ERROR << "Format i2c bus name error";
+    exit(-3);
+  }
+
+  INFO << boost::format("test %s") % bus_name;
 
   /* Open i2c bus /dev/i2c-0 */
   if ((bus = i2c_open("/dev/i2c-8")) == -1) {
@@ -31,17 +78,43 @@ int main() {
   device.iaddr_bytes = 1; /* Device internal address is 1 byte */
   device.page_bytes = 16; /* Device are capable of 16 bytes per page */
 
-  unsigned char buffer[256];
+  uint8_t register_address = 0x06;  // state of charge
+
+  unsigned char buffer[8];
   ssize_t size = sizeof(buffer);
   memset(buffer, 0, sizeof(buffer));
 
+  unsigned int arr[5] = {0x05, 0x04, 0xAA, 0x0F, 0x0D};
+
   /* From i2c 0x0 address read 256 bytes data to buffer */
-  if ((i2c_read(&device, 0x06, buffer, size)) != size) {
-    ERROR << "don't know what went wrong";
+  if ((i2c_read(&device, register_address, buffer, size)) != size) {
+    ERROR << "WOOT";
     /* Error process */
   } else {
-    INFO << printf("%s", buffer);
+    fprintf(stdout, "Read data:\n");
+    DEBUG << boost::format("%s") % buffer;
+
+    // print_i2c_data(buffer, sizeof(buffer));
+
+    DEBUG << boost::format("3rd byte (ascii): %02d") % (int)buffer[2];
+    DEBUG << boost::format("3rd byte (ascii): %02d") % (int)arr[2];
+
+    DEBUG << boost::format("3rd byte (hex): 0x%02x") % (int)buffer[2];
+    DEBUG << boost::format("4th byte (hex): 0x%02x") % (int)buffer[3];
   }
+
+  // char buffer[2];
+  // ssize_t size = sizeof(buffer);
+  // memset(buffer, 0, sizeof(buffer));
+  // Data data = {0};
+
+  // if ((i2c_read(&device, register_address, buffer, size)) != size) {
+  //   boost::iostreams::array_source source(buffer);
+  //   boost::iostreams::stream<boost::iostreams::array_source> stream(source);
+  //   boost::archive::binary_iarchive in_archive(stream);
+  //   in_archive >> data;
+  //   DEBUG << data.value;
+  // }
 
   i2c_close(bus);
 

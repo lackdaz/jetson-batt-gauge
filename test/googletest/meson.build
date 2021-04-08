@@ -7,10 +7,16 @@
 
 # a list of dicts describing tests
 tests = [
+#   {
+#     'description': 'math test for i2c conversions',
+#     'filename': 'test_math',
+#     'sources': ['test_math.cpp'],
+#     'suites': ['unit'],
+#   },
   {
-    'description': 'math test for i2c conversions',
-    'filename': 'test_math',
-    'sources': ['test_math.cpp'],
+    'description': 'unit test for bitwise operations',
+    'filename': 'test_bitwise',
+    'sources': ['test_bitwise.cpp'],
     'suites': ['unit'],
   }
 ]
