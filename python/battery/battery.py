@@ -10,7 +10,6 @@ from .registers import register
 from .bitwise import *
 from .bus_context import *
 
-
 class Battery:
     address: int = 0x36
     charge_level: Optional[float] = None
@@ -37,9 +36,9 @@ class Battery:
         buffer = bytearray(8)
         with open_i2c_bus(cls.address, benchmark=debug) as device:
             device.write_then_readinto(addr, buffer)
-            cls.charge_level = (
-                struct.unpack_from("@H", buffer)[0] >> 8
-            )  # just read upper byte
+            register_value = struct.unpack_from("<H", buffer)[0]
+            print(f"charge_level_buffer: {buffer}")
+            cls.charge_level = register_value >> 8  # just read upper byte
         if debug:
             with formatted_headers("charge_level", benchmark=True):
                 print(f"battery level: {cls.charge_level:.2f}%")

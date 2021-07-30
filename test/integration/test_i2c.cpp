@@ -44,11 +44,6 @@ void print_i2c_data(const unsigned char* data, size_t len) {
 }
 
 int main() {
-  // printf("Hello there %#04x.\n", jetsonbatt::registers::current);
-  // std::cout << "1) size of namespace variable:              "
-  //           << sizeof(jetsonbatt::registers::current) << "\n";
-  // battery::hello_world();
-
   short int bus = 8;
   char bus_name[32];
   memset(bus_name, 0, sizeof(bus_name));
@@ -72,33 +67,30 @@ int main() {
   I2CDevice device;
   memset(&device, 0, sizeof(device));  // sets array to zeros
 
-  /* 24C04 */
   device.bus = bus;       /* Bus 0 */
-  device.addr = 0x36;     /* Slave address is 0x50, 7-bit */
+  device.addr = 0x36;     /* Slave address is 0x36, 7-bit */
   device.iaddr_bytes = 1; /* Device internal address is 1 byte */
   device.page_bytes = 16; /* Device are capable of 16 bytes per page */
 
-  uint8_t register_address = 0x06;  // state of charge
+  uint8_t register_address = 0x1c;  // state of charge
 
   unsigned char buffer[8];
   ssize_t size = sizeof(buffer);
   memset(buffer, 0, sizeof(buffer));
 
-  unsigned int arr[5] = {0x05, 0x04, 0xAA, 0x0F, 0x0D};
+  //   unsigned int arr[5] = {0x05, 0x04, 0xAA, 0x0F, 0x0D};
 
   /* From i2c 0x0 address read 256 bytes data to buffer */
   if ((i2c_read(&device, register_address, buffer, size)) != size) {
-    ERROR << "WOOT";
     /* Error process */
+    ERROR << "i2c channel read error";
   } else {
-    fprintf(stdout, "Read data:\n");
-    DEBUG << boost::format("%s") % buffer;
+    DEBUG << "Read data: " << boost::format("%s") % buffer;
 
-    // print_i2c_data(buffer, sizeof(buffer));
+    print_i2c_data(buffer, sizeof(buffer));
 
     DEBUG << boost::format("3rd byte (ascii): %02d") % (int)buffer[2];
-    DEBUG << boost::format("3rd byte (ascii): %02d") % (int)arr[2];
-
+    DEBUG << boost::format("3rd byte (ascii): %02d") % (int)buffer[2];
     DEBUG << boost::format("3rd byte (hex): 0x%02x") % (int)buffer[2];
     DEBUG << boost::format("4th byte (hex): 0x%02x") % (int)buffer[3];
   }
@@ -107,14 +99,6 @@ int main() {
   // ssize_t size = sizeof(buffer);
   // memset(buffer, 0, sizeof(buffer));
   // Data data = {0};
-
-  // if ((i2c_read(&device, register_address, buffer, size)) != size) {
-  //   boost::iostreams::array_source source(buffer);
-  //   boost::iostreams::stream<boost::iostreams::array_source> stream(source);
-  //   boost::archive::binary_iarchive in_archive(stream);
-  //   in_archive >> data;
-  //   DEBUG << data.value;
-  // }
 
   i2c_close(bus);
 

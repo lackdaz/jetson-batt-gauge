@@ -16,16 +16,6 @@ TEST(SquareRootTest, PositiveNos) {
   ASSERT_EQ(0, 0 + 0);
 }
 
-TEST(AdditionTest, PositiveNos) {
-  ASSERT_EQ(6, battery::add(3, 3));
-  ASSERT_EQ(6, battery::add(4, 2));
-}
-
-TEST(MultiplyTest, PositiveNos) {
-  ASSERT_EQ(6, battery::multiply(3, 2));
-  ASSERT_EQ(8, battery::multiply(4, 3));
-}
-
 int main(int argc, char** argv) {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

@@ -5,19 +5,15 @@
  */
 #include "bitwise.hpp"
 #include "iostream"
+#include "assert.h"
 
-namespace {
-  int16_t compute_twos_complement(size_t udec, uint8_t bits);
-}
+namespace {}
 
 namespace bitwise {
-  int8_t bin8(uint8_t a) { return compute_twos_complement(a, sizeof(a)); };
-  int16_t bin16(uint16_t a) { return compute_twos_complement(a, sizeof(a)); };
+  int8_t compute_signed_twos_complement(int8_t udec) {
+    uint8_t bits = sizeof(udec) * 8;
+    return (int8_t)(udec & (1 << (bits - 1))) ? udec -= 1 << bits : udec;
+  };
 }  // namespace bitwise
 
-namespace {
-  int16_t compute_twos_complement(size_t udec, uint8_t byte) {
-    uint8_t bits = byte * 8;
-    return (udec & (1 << (bits - 1))) ? udec -= 1 << bits : udec;
-  }
-}  // namespace
+namespace {}  // namespace

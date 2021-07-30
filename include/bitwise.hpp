@@ -6,7 +6,8 @@
 #include <stdlib.h>
 #include <string>
 
+#include "jetsonbatt_error.hpp"
+
 namespace bitwise {
-  int8_t bin8(uint8_t a);
-  int16_t bin16(uint16_t a);
+  int8_t compute_signed_twos_complement(int8_t udec);
 }  // namespace bitwise

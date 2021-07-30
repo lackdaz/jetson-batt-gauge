@@ -18,6 +18,12 @@ tests = [
     'filename': 'test_bitwise',
     'sources': ['test_bitwise.cpp'],
     'suites': ['unit'],
+  },
+  {
+    'description': 'unit test for battery methods',
+    'filename': 'test_battery',
+    'sources': ['test_battery.cpp'],
+    'suites': ['unit'],
   }
 ]
 
